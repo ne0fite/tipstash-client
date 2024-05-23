@@ -1,0 +1,60 @@
+@import 'ngx-toastr/toastr';
+// @import 'ngx-toastr/toastr-bs4-alert';
+
+@import 'theme/colors.scss';
+
+nav {
+    margin-bottom: 1em;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1em 0;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+.button-row {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+        margin-left: 0.5em;
+    }
+}
+
+label {
+    color: $label-text;
+    font-size: 0.8rem;
+}
+
+.validation-message {
+    color: $validation-error;
+}
+
+form {
+    label {
+        padding-left: 0.25rem;
+    }
+
+    .required-input label:after {
+        content: '*';
+        margin-left: 0.25rem;
+        color: $validation-error;
+    }
+
+    .validation-message {
+        font-size: 0.8rem;
+        padding-left: 0.25rem;
+    }
+}
+
+button {
+  fa-icon {
+    margin-right: 0.5rem;
+  }
+}

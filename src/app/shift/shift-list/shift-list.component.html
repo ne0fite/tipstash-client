@@ -1,0 +1,24 @@
+<div class="list-header">
+  <div>
+    <div class="mb-1">
+      {{totalRows|number}} Shifts
+    </div>
+    <div class="mb-1">
+      <a (click)="toggleSortDirection($event)" href="">
+        Sorted by Clock In&nbsp;
+        <fa-icon [icon]="sortArrowIcon"></fa-icon>
+      </a>
+    </div>
+  </div>
+  <div>
+    <p-button type="button" severity="secondary" [badge]="numFilters" (click)="filterShifts()">
+      <fa-icon [icon]="faSliders"></fa-icon> Filter
+    </p-button>
+  </div>
+</div>
+
+<ts-shift-card *ngFor="let shift of shifts" [shift]="shift"></ts-shift-card>
+
+<div>
+  <button pButton type="button" (click)="loadNextPage()" severity="secondary">Load More</button>
+</div>

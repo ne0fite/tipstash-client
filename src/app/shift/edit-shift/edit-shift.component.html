@@ -1,0 +1,163 @@
+<form [formGroup]="shiftForm" (ngSubmit)="saveShift()" class="form">
+  <div class="header">
+    <h2>
+      <a  routerLink="/shift">
+        <fa-icon [icon]="faChevronLeft"></fa-icon>
+      </a>
+      {{title}}
+    </h2>
+
+    <div class="button-row">
+      <button pButton type="submit" name="saveShift" severity="primary">
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="submitted && !shiftForm.valid">
+    Please check form for errors.
+  </div>
+
+  <div class="row mb-3">
+    <div class="col required-input"
+        ngClass="{ invalid-input: submitted && shiftForm.controls.jobId.errors }"
+    >
+      <div>
+        <p-dropdown formControlName="jobId"
+            [id]="'jobId'"
+            [options]="jobs"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Select Job"
+            [style]="{ width: '100%' }"
+            (onChange)="onJobChange($event)"
+        />
+      </div>
+      <label for="name">Job Title</label>
+      <p class="validation-message" *ngIf="submitted && jobId?.errors?.['required']">
+        Please select a Job
+      </p>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col required-input">
+      <div>
+        <p-calendar formControlName="date"
+          [inputId]="'date'"
+          [showButtonBar]="true"
+        />
+      </div>
+      <label for="date">Date</label>
+      <p class="validation-message" *ngIf="submitted && date?.errors?.['required']">
+        Date is required
+      </p>
+    </div>
+    <div class="col required-input">
+      <div>
+        <p-calendar formControlName="clockIn"
+          [inputId]="'clockIn'"
+          [timeOnly]="true"
+        />
+      </div>
+      <label for="clockIn">Clock In</label>
+      <p class="validation-message" *ngIf="submitted && clockIn?.errors?.['required']">
+        Clock In is required
+      </p>
+    </div>
+    <div class="col required-input">
+      <div>
+        <p-calendar formControlName="clockOut"
+          [inputId]="'clockOut'"
+          [timeOnly]="true"
+        />
+      </div>
+      <label for="clockOut">Clock Out</label>
+      <p class="validation-message" *ngIf="submitted && clockOut?.errors?.['required']">
+        Clock Out is required
+      </p>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col required-input"
+        ngClass="{ invalid-input: submitted && shiftForm.controls.amount.errors }"
+    >
+      <div>
+        <p-inputNumber formControlName="amount"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+          [inputId]="'amount'"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+        />
+      </div>
+      <label for="amount">Total Tips</label>
+      <p class="validation-message" *ngIf="submitted && amount?.errors?.['required']">
+        Total Tips is required
+      </p>
+    </div>
+    <div class="col required-input"
+        ngClass="{ invalid-input: submitted && shiftForm.controls.sales.errors }"
+    >
+      <div>
+        <p-inputNumber formControlName="sales"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+          [inputId]="'sales'"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+        />
+      </div>
+      <label for="sales">Sales</label>
+      <p class="validation-message" *ngIf="submitted && sales?.errors?.['required']">
+        Sales is required
+      </p>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col">
+      <div>
+        <p-inputNumber formControlName="tipOut"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+          [inputId]="'tipOut'"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+        />
+      </div>
+      <label for="tipOut">Tip Out</label>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col">
+      <div>
+        <textarea
+            rows="5"
+            cols="30"
+            pInputTextarea
+            formControlName="notes">
+        </textarea>
+      </div>
+      <label for="tipOut">Notes</label>
+    </div>
+  </div>
+
+  <div class="mb-3 button-row">
+    <button type="button"
+        pButton
+        name="deleteShift"
+        id="deleteShift"
+        (click)="deleteShift()"
+        *ngIf="shift.id != null"
+        severity="danger"
+    >
+        Delete Shift
+    </button>
+</div>
+</form>

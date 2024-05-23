@@ -1,0 +1,101 @@
+<form [formGroup]="jobForm" (ngSubmit)="saveJob()" class="form">
+  <div class="header">
+    <h2>
+      <a  routerLink="/job">
+        <fa-icon [icon]="faChevronLeft"></fa-icon>
+      </a>
+      {{title}}
+    </h2>
+
+    <div class="button-row">
+      <button pButton type="submit" name="saveJob" severity="primary">
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="submitted && !jobForm.valid">
+    Please check form for errors.
+  </div>
+
+  <div class="mb-3 required-input"
+       ngClass="{ invalid-input: submitted && jobForm.controls.name.errors }"
+  >
+    <div>
+      <input pInputText id="name" name="name" type="name" formControlName="name" />
+    </div>
+    <label for="name">Job Title</label>
+    <p class="validation-message" *ngIf="submitted && name?.errors?.['required']">
+      Job Title is required
+    </p>
+  </div>
+
+  <div class="mb-3 required-input"
+       ngClass="{ invalid-input: submitted && jobForm.controls.payRate.errors }"
+  >
+    <div>
+      <p-inputNumber formControlName="payRate"
+        mode="currency"
+        currency="USD"
+        locale="en-US"
+        [inputId]="'payRate'"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+      />
+    </div>
+    <label for="payRate">Pay Rate</label>
+    <p class="validation-message" *ngIf="submitted && payRate?.errors?.['required']">
+      Pay Rate is required
+    </p>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col">
+      <div>
+        <p-calendar formControlName="defaultClockIn"
+          [inputId]="'defaultClockIn'"
+          [timeOnly]="true"
+        />
+      </div>
+      <label for="defaultClockIn">Default Clock In</label>
+      <p class="validation-message" *ngIf="submitted && defaultClockIn?.errors?.['required']">
+        Default Clock In is required
+      </p>
+    </div>
+    <div class="col">
+      <div>
+        <p-calendar formControlName="defaultClockOut"
+          [inputId]="'defaultClockOut'"
+          [timeOnly]="true"
+        />
+      </div>
+      <label for="defaultClockOut">Default Clock Out</label>
+      <p class="validation-message" *ngIf="submitted && defaultClockOut?.errors?.['required']">
+        Default Clock Out is required
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <label for="defaultJob">Default Job?
+        <p-inputSwitch formControlName="defaultJob"
+          [inputId]="'defaultJob'"
+        />
+      </label>
+    </div>
+  </div>
+
+  <div class="mb-3 button-row">
+    <button type="button"
+        pButton
+        name="deleteJob"
+        id="deleteJob"
+        (click)="deleteJob()"
+        *ngIf="job.id != null"
+        severity="danger"
+    >
+        Delete Job
+    </button>
+</div>
+</form>

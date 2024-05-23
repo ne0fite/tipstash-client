@@ -1,0 +1,12 @@
+.shift-card {
+  margin-bottom: 1rem;
+  cursor: pointer;
+
+  .card-title {
+    font-weight: bold;
+  }
+
+  .col:last-of-type {
+    text-align: right;
+  }
+}

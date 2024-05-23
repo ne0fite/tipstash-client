@@ -1,0 +1,9 @@
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/variables";
+
+$label-text: $gray-600;
+
+$profit: $success;
+$loss: $danger;
+
+$validation-error: $danger;

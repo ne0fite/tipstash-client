@@ -1,0 +1,26 @@
+<div *ngIf="overview">
+  <div class="row">
+    <div class="col">
+      <ts-overview-panel title="Tips" [overview]="overview" field="amount" format="c"></ts-overview-panel>
+    </div>
+    <div class="col">
+      <ts-overview-panel title="Sales" [overview]="overview" field="sales" format="c"></ts-overview-panel>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <ts-overview-panel title="Tip Rate" [overview]="overview" field="tipRate" format="c"></ts-overview-panel>
+    </div>
+    <div class="col">
+      <ts-overview-panel title="Tip Percent" [overview]="overview" field="tipPercent" format="p"></ts-overview-panel>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <ts-overview-panel title="Total Hours" [overview]="overview" field="hours" format="n"></ts-overview-panel>
+    </div>
+    <div class="col">
+      <ts-overview-panel title="Total Wages" [overview]="overview" field="wages" format="c"></ts-overview-panel>
+    </div>
+  </div>
+</div>

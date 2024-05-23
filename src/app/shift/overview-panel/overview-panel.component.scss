@@ -1,0 +1,16 @@
+.overview-panel {
+  margin-bottom: 1rem;
+
+  .heading {
+    display: flex;
+    justify-content: space-between;
+
+    .summary-amount {
+      text-align: right;
+
+      h3 {
+        margin-bottom: 0.25rem;
+      }
+    }
+  }
+}

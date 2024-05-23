@@ -1,0 +1,42 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Filter Shifts</h4>
+  <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="cancel()">
+    <span aria-hidden="true" class="visually-hidden">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="filterForm" (ngSubmit)="apply()">
+    <div class="row mb-3">
+      <div class="col">
+        <div>
+          <p-dropdown formControlName="dateRange" [options]="dateRangeOptions" optionLabel="label"
+            optionValue="value" />
+        </div>
+        <label>Date Range</label>
+      </div>
+
+      <div class="col" *ngIf="filterForm.value.dateRange === 'custom'">
+        <div>
+          <p-calendar formControlName="dateRangeDates" selectionMode="range" [readonlyInput]="true" />
+        </div>
+        <label>Custom Date Range</label>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <div>
+          <p-multiSelect [options]="jobs" formControlName="jobIds" optionLabel="name" optionValue="id"
+            placeholder="All Jobs"
+            [inputId]="'jobIds'" [filter]="false" />
+        </div>
+        <label>Jobs</label>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="clear()">Clear</button>
+  <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+  <button type="submit" class="btn btn-primary" (click)="apply()">Apply</button>
+</div>

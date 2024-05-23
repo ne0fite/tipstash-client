@@ -1,0 +1,36 @@
+<h2>Login</h2>
+<form class="form" [formGroup]="loginForm" (ngSubmit)="login()">
+  <div class="alert alert-danger" *ngIf="submitted && !loginForm.valid">
+    Please check form for errors.
+  </div>
+  <div class="mb-3 required-input"
+       ngClass="{ invalid-input: submitted && dealForm.controls.email.errors }"
+  >
+    <div>
+      <input pInputText id="email" name="email" type="email" formControlName="email" />
+    </div>
+    <label for="email">Email Address</label>
+    <p class="validation-message" *ngIf="submitted && email?.errors?.['required']">
+      Email is required
+    </p>
+    <p class="validation-message" *ngIf="submitted && email?.errors?.['email']">
+      Please enter a valid email address
+    </p>
+  </div>
+  <div class="mb-3 required-input"
+       ngClass="{ invalid-input: submitted && dealForm.controls.email.errors }"
+  >
+    <div>
+      <p-password formControlName="password" [inputId]="'password'" [feedback]="false" [toggleMask]="true" />
+    </div>
+    <label for="password">Password</label>
+    <p class="validation-message" *ngIf="submitted && password?.errors?.['required']">
+      Password is required
+    </p>
+  </div>
+  <div class="mb-3">
+    <button pButton type="submit" name="saveDeal" severity="primary">
+      Save
+    </button>
+  </div>
+</form>

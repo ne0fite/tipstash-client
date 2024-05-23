@@ -1,0 +1,40 @@
+<div class="card shift-card" (click)="editShift()">
+  <div class="card-body">
+    <div class="row card-title">
+      <div class="col">
+        <a routerLink="/shift/{{shift.id}}">{{shift.date|date}}</a>
+      </div>
+      <div class="col">
+        {{shift.amount|currency}} ({{shift.tipPercent|number:'1.0-2'}}%)
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        {{shift.clockIn|date:'h:mm a'}} - {{shift.clockOut|date:'h:mm a'}}
+      </div>
+      <div class="col">
+        {{shift.hours|number}} hrs - {{shift.tipRate|currency}}/hr
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        Sales: {{shift.sales|currency}}
+      </div>
+      <div class="col">
+        Wages: {{shift.wages|currency}}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        {{shift.job?.name}}
+      </div>
+      <div class="col">
+        Tip Out: {{shift.tipOut|currency}}
+      </div>
+    </div>
+
+  </div>
+</div>
