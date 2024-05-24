@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://api-dev.tipstash.pro',
+  apiUrl: 'https://api-dev.tipstash.pro',
 };
