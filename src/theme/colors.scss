@@ -1,6 +1,8 @@
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 
+$navbar-item-text: $color-contrast-light;
+
 $label-text: $gray-600;
 
 $profit: $success;

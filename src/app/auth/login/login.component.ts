@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-      if (this.authService.isLoggedIn()) {
+      if (this.authService.accessToken != null) {
         this.router.navigate(['']);
       }
   }

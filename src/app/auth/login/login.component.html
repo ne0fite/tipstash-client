@@ -7,7 +7,7 @@
        ngClass="{ invalid-input: submitted && dealForm.controls.email.errors }"
   >
     <div>
-      <input pInputText id="email" name="email" type="email" formControlName="email" />
+      <input pInputText id="email" name="email" type="email" formControlName="email" style="width:100%;" />
     </div>
     <label for="email">Email Address</label>
     <p class="validation-message" *ngIf="submitted && email?.errors?.['required']">
@@ -21,7 +21,7 @@
        ngClass="{ invalid-input: submitted && dealForm.controls.email.errors }"
   >
     <div>
-      <p-password formControlName="password" [inputId]="'password'" [feedback]="false" [toggleMask]="true" />
+      <p-password formControlName="password" [inputId]="'password'" [feedback]="false" [toggleMask]="true"  [style]="{ width: '100%' }" />
     </div>
     <label for="password">Password</label>
     <p class="validation-message" *ngIf="submitted && password?.errors?.['required']">

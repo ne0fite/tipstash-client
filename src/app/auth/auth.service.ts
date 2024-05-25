@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import * as Constants from '../constants';
@@ -9,20 +9,21 @@ import * as Constants from '../constants';
   providedIn: 'root'
 })
 export class AuthService {
-  accessToken?: string | null;
+  public accessToken?: string | null;
+
+  private loggedInSubject = new BehaviorSubject<boolean>(false); // Initial logged-in status
+  public loggedIn$: Observable<boolean> = this.loggedInSubject.asObservable();
 
   constructor(
     private http: HttpClient,
   ) {
     this.accessToken = localStorage.getItem(Constants.LS_ACCESS_TOKEN_KEY);
+    console.log('service init', this.accessToken);
+    this.loggedInSubject.next(this.accessToken != null);
   }
 
   getAccessToken() {
     return this.accessToken;
-  }
-
-  isLoggedIn(): boolean {
-    return this.accessToken != null;
   }
 
   /**
@@ -45,6 +46,8 @@ export class AuthService {
 
     this.accessToken = response.accessToken;
 
+    this.loggedInSubject.next(true);
+
     if (this.accessToken == null) {
       throw new Error('Access token missing from login response')
     }
@@ -54,6 +57,11 @@ export class AuthService {
 
   logout() {
     this.accessToken = null;
+    this.loggedInSubject.next(false);
     localStorage.removeItem(Constants.LS_ACCESS_TOKEN_KEY);
+  }
+
+  isLoggedIn(): Observable<boolean> {
+    return this.loggedIn$;
   }
 }

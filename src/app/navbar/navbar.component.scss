@@ -1,0 +1,27 @@
+@import '../../theme/colors.scss';
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+
+  .navbar-brand {
+    margin-right: 1.5rem;
+  }
+
+  .navbar-items {
+    display: flex;
+    flex: 1;
+  }
+
+  .nav-item {
+    margin-right: 1.5rem;
+  }
+
+  .nav-link {
+    color: $navbar-item-text;
+
+    fa-icon {
+      margin-right: 0.25rem;
+    }
+  }
+}
