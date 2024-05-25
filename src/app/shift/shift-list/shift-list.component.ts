@@ -55,7 +55,7 @@ export class ShiftListComponent {
 
   async loadNextPage() {
     const sort = {
-      field: 'clockIn',
+      field: 'date',
       dir: this.sortDirection,
     };
 
@@ -114,6 +114,11 @@ export class ShiftListComponent {
       this.sortDirection = 'asc';
       this.sortArrowIcon = faArrowUp;
     }
+
+    // sort changed - go back to top
+    this.lastOffset = null;
+    this.shifts = [];
+
     await this.loadNextPage();
   }
 }
