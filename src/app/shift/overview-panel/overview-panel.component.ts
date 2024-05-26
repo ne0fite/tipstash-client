@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { DataItem, OverviewData } from '../shift.service';
+import { Bucket, DataItem, OverviewData } from '../shift.service';
 import { CurrencyPipe, formatCurrency, formatNumber, formatPercent } from '@angular/common';
 import { ChartComponent } from '../chart/chart.component';
 
@@ -18,6 +18,8 @@ export class OverviewPanelComponent implements OnChanges {
   @Input() format: string = 'd';
   @Input({ required: true }) overview!: OverviewData;
   @Input({ required: true }) field!: string;
+  @Input() withPrior: boolean = false;
+  @Input() bucket: Bucket = 'month';
 
   currentValue!: string;
   priorValue!: string;

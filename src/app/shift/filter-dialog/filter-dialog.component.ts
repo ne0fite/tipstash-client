@@ -53,6 +53,15 @@ export class FilterDialogComponent implements OnInit {
     label: 'Last Month',
     value: 'lastmonth',
   }, {
+    label: 'Month to Date',
+    value: 'mtd',
+  }, {
+    label: 'Year to Date',
+    value: 'ytd',
+  }, {
+    label: 'Last 12 Months',
+    value: 'last12months',
+  }, {
     label: 'Last Year',
     value: 'lastyear',
   }, {
@@ -129,6 +138,21 @@ export class FilterDialogComponent implements OnInit {
         return [
           startDate.startOf('month').minus({ months: 1 }).toJSDate(),
           endDate.endOf('month').minus({ months: 1 }).toJSDate(),
+        ];
+      case 'mtd':
+        return [
+          startDate.startOf('month').toJSDate(),
+          endDate.endOf('month').toJSDate(),
+        ];
+      case 'ytd':
+        return [
+          startDate.startOf('year').toJSDate(),
+          endDate.endOf('month').toJSDate(),
+        ];
+      case 'last12months':
+        return [
+          startDate.startOf('month').minus({ months: 11 }).toJSDate(),
+          endDate.endOf('month').toJSDate(),
         ];
       case 'lastyear':
         return [

@@ -28,8 +28,9 @@ import { DialogService } from '../../dialog/dialog.service';
 export class ShiftListComponent {
   faSliders = faSliders;
 
-  totalRows = 0;
   shifts: any[] = [];
+  totalRows = 0;
+  hasMore = false;
 
   filters = {
     dateRange: null,
@@ -61,7 +62,6 @@ export class ShiftListComponent {
     if (savedStateJson) {
       try {
         const savedState = JSON.parse(savedStateJson);
-        console.log(savedState);
         const savedFilters = savedState.filters;
         if (Array.isArray(savedFilters.dateRangeDates)) {
           for (let i = 0; i < savedFilters.dateRangeDates.length; i++) {
@@ -115,6 +115,12 @@ export class ShiftListComponent {
     const response = await this.shiftService.find(this.filters, sort, this.lastOffset, this.pageSize);
     this.shifts = this.shifts.concat(response.results);
     this.totalRows = response.totalRows;
+
+    if (this.totalRows > this.shifts.length + this.pageSize) {
+      this.hasMore = true;
+    } else {
+      this.hasMore = false;
+    }
   }
 
   async filterShifts() {

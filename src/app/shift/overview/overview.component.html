@@ -1,26 +1,56 @@
+<div class="list-header">
+  <div *ngIf="filters.dateRangeDates">
+    {{filters.dateRangeDates[0]|date}} - {{filters.dateRangeDates[1]|date}}
+  </div>
+  <div *ngIf="!filters.dateRangeDates">
+    All Dates
+  </div>
+  <div>
+    <p-button type="button" severity="secondary" [badge]="numFilters" (click)="filterShifts()">
+      <fa-icon [icon]="faSliders"></fa-icon> Filter
+    </p-button>
+  </div>
+</div>
+
+<div class="list-header">
+  <div>
+    <p-dropdown [options]="bucketOptions" [(ngModel)]="bucket" optionLabel="label" optionValue="value" (ngModelChange)="withPriorChanged()" />
+  </div>
+  <div *ngIf="filters.dateRangeDates" class="form-inline">
+    <span class="label">Compare</span>
+    <p-toggleButton [(ngModel)]="withPrior" onLabel="On" offLabel="Off" (ngModelChange)="withPriorChanged()" />
+  </div>
+</div>
+
 <div *ngIf="overview">
   <div class="row">
     <div class="col">
-      <ts-overview-panel title="Tips" [overview]="overview" field="amount" format="c"></ts-overview-panel>
+      <ts-overview-panel title="Tips" [overview]="overview" field="amount" format="c"
+        [withPrior]="withPrior" [bucket]="bucket"></ts-overview-panel>
     </div>
     <div class="col">
-      <ts-overview-panel title="Sales" [overview]="overview" field="sales" format="c"></ts-overview-panel>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <ts-overview-panel title="Tip Rate" [overview]="overview" field="tipRate" format="c"></ts-overview-panel>
-    </div>
-    <div class="col">
-      <ts-overview-panel title="Tip Percent" [overview]="overview" field="tipPercent" format="p"></ts-overview-panel>
+      <ts-overview-panel title="Sales" [overview]="overview" field="sales" format="c"
+        [withPrior]="withPrior" [bucket]="bucket"></ts-overview-panel>
     </div>
   </div>
   <div class="row">
     <div class="col">
-      <ts-overview-panel title="Total Hours" [overview]="overview" field="hours" format="n"></ts-overview-panel>
+      <ts-overview-panel title="Tip Rate" [overview]="overview" field="tipRate" format="c"
+        [withPrior]="withPrior" [bucket]="bucket"></ts-overview-panel>
     </div>
     <div class="col">
-      <ts-overview-panel title="Total Wages" [overview]="overview" field="wages" format="c"></ts-overview-panel>
+      <ts-overview-panel title="Tip Percent" [overview]="overview" field="tipPercent" format="p"
+        [withPrior]="withPrior" [bucket]="bucket"></ts-overview-panel>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <ts-overview-panel title="Total Hours" [overview]="overview" field="hours" format="n"
+        [withPrior]="withPrior" [bucket]="bucket"></ts-overview-panel>
+    </div>
+    <div class="col">
+      <ts-overview-panel title="Total Wages" [overview]="overview" field="wages" format="c"
+        [withPrior]="withPrior" [bucket]="bucket"></ts-overview-panel>
     </div>
   </div>
 </div>

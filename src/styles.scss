@@ -36,6 +36,16 @@ label {
     color: $validation-error;
 }
 
+.form-inline {
+  display: flex;
+  align-items: center;
+
+  label,
+  .label {
+    margin: 0 0.5rem 6px 0;
+  }
+}
+
 form {
     label {
         padding-left: 0.25rem;
@@ -51,19 +61,17 @@ form {
         font-size: 0.8rem;
         padding-left: 0.25rem;
     }
-
-    .form-inline {
-      display: flex;
-      align-items: center;
-
-      label {
-        margin: 0 0.5rem 6px 0;
-      }
-    }
 }
 
 button {
   fa-icon {
     margin-right: 0.5rem;
   }
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }

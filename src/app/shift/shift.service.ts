@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { objectToQueryString } from '../utils/object-to-query-string';
 
-export type Bucket = 'day' | 'month';
+export type Bucket = 'year' | 'month' | 'day';
 
 export type PeriodDataItem = {
   bucket: string;
@@ -67,6 +67,14 @@ export type OverviewData = {
   };
 };
 
+export type DateRange = 'thismonth' | 'thisyear' | 'lastmonth' | 'mtd' | 'ytd' | 'last12months' | 'lastyear' | 'custom';
+
+export type ShiftFilter = {
+  dateRange: DateRange | null,
+  dateRangeDates: Date[] | null,
+  jobIds: string[]
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -77,14 +85,9 @@ export class ShiftService {
 
   static AGGREGATE_FIELDS = ['amount', 'sales', 'wages', 'hours'];
 
-  async getOverview(from: Date, to: Date, bucket: Bucket): Promise<OverviewData> {
+  async getOverview(filter: any, bucket: Bucket, withPrior: boolean): Promise<OverviewData> {
     // get current year data
-    const currentPeriodData = await this.queryOverviewData(from, to, bucket);
-
-    // get prior year data for comparison
-    const priorFrom = DateTime.fromJSDate(from).minus({ year: 1 }).toJSDate();
-    const priorTo = DateTime.fromJSDate(to).minus({ year: 1 }).toJSDate();
-    const priorPeriodData = await this.queryOverviewData(priorFrom, priorTo, bucket);
+    const currentPeriodData = await this.queryOverviewData(filter, bucket);
 
     const seriesMap = new Map<string, DataItem>();
 
@@ -102,26 +105,6 @@ export class ShiftService {
       seriesMap.set(new Date(currentPeriodItem.bucket).toISOString(), dataItem);
     }
 
-    for (const priorPeriodItem of priorPeriodData.series) {
-      const priorBucketDate = new Date(priorPeriodItem.bucket);
-      const currentBucketDate = DateTime.fromJSDate(priorBucketDate).plus({ year: 1 }).toJSDate();
-      if (!currentBucketDate) {
-        continue;
-      }
-
-      const dataItem = seriesMap.get(currentBucketDate.toISOString());
-      if (!dataItem) {
-        continue;
-      }
-
-      dataItem.prior_amount = priorPeriodItem.amount_sum;
-      dataItem.prior_sales = priorPeriodItem.sales_sum;
-      dataItem.prior_hours = priorPeriodItem.hours_sum;
-      dataItem.prior_wages = priorPeriodItem.wages_sum;
-      dataItem.prior_tipRate = priorPeriodItem.amount_sum / priorPeriodItem.hours_sum;
-      dataItem.prior_tipPercent = priorPeriodItem.amount_sum / priorPeriodItem.sales_sum * 100;
-    }
-
     const overview = {
       series: Array.from(seriesMap.values()),
       totals: {
@@ -131,19 +114,62 @@ export class ShiftService {
         wages: currentPeriodData.totals.wages_sum,
         tipRate: currentPeriodData.totals.amount_sum / currentPeriodData.totals.hours_sum,
         tipPercent: currentPeriodData.totals.amount_sum / currentPeriodData.totals.sales_sum * 100,
-        prior_amount: priorPeriodData.totals.amount_sum,
-        prior_sales: priorPeriodData.totals.sales_sum,
-        prior_hours: priorPeriodData.totals.hours_sum,
-        prior_wages: priorPeriodData.totals.wages_sum,
-        prior_tipRate: priorPeriodData.totals.amount_sum / priorPeriodData.totals.hours_sum,
-        prior_tipPercent: priorPeriodData.totals.amount_sum / priorPeriodData.totals.sales_sum * 100,
+        prior_amount: 0,
+        prior_sales: 0,
+        prior_hours: 0,
+        prior_wages: 0,
+        prior_tipRate: 0,
+        prior_tipPercent: 0,
       }
     };
+
+    if (withPrior && filter.dateRange) {
+      const priorFilter: ShiftFilter = {
+        dateRange: filter.dateRange,
+        dateRangeDates: null,
+        jobIds: filter.jobIds
+      };
+
+      if (Array.isArray(filter.dateRangeDates)) {
+        priorFilter.dateRangeDates = filter.dateRangeDates.map((date: Date) => {
+          return DateTime.fromJSDate(date).minus({ year: 1 }).toJSDate();
+        })
+      }
+
+      const priorPeriodData = await this.queryOverviewData(priorFilter, bucket);
+
+      for (const priorPeriodItem of priorPeriodData.series) {
+        const priorBucketDate = new Date(priorPeriodItem.bucket);
+        const currentBucketDate = DateTime.fromJSDate(priorBucketDate).plus({ year: 1 }).toJSDate();
+        if (!currentBucketDate) {
+          continue;
+        }
+
+        const dataItem = seriesMap.get(currentBucketDate.toISOString());
+        if (!dataItem) {
+          continue;
+        }
+
+        dataItem.prior_amount = priorPeriodItem.amount_sum;
+        dataItem.prior_sales = priorPeriodItem.sales_sum;
+        dataItem.prior_hours = priorPeriodItem.hours_sum;
+        dataItem.prior_wages = priorPeriodItem.wages_sum;
+        dataItem.prior_tipRate = priorPeriodItem.amount_sum / priorPeriodItem.hours_sum;
+        dataItem.prior_tipPercent = priorPeriodItem.amount_sum / priorPeriodItem.sales_sum * 100;
+      }
+
+      overview.totals.prior_amount = priorPeriodData.totals.amount_sum;
+      overview.totals.prior_sales = priorPeriodData.totals.sales_sum;
+      overview.totals.prior_hours = priorPeriodData.totals.hours_sum;
+      overview.totals.prior_wages = priorPeriodData.totals.wages_sum;
+      overview.totals.prior_tipRate = priorPeriodData.totals.amount_sum / priorPeriodData.totals.hours_sum;
+      overview.totals.prior_tipPercent = priorPeriodData.totals.amount_sum / priorPeriodData.totals.sales_sum * 100;
+    }
 
     return overview;
   }
 
-  private async queryOverviewData(from: Date, to: Date, bucket: 'day' | 'month'): Promise<PeriodData> {
+  private async queryOverviewData(filter: ShiftFilter, bucket: Bucket): Promise<PeriodData> {
     const totalsQuery = {
       aggregates: ShiftService.AGGREGATE_FIELDS.map((field) => ({
         field,
@@ -151,17 +177,31 @@ export class ShiftService {
       })),
       filter: {
         logic: 'and',
-        filters: [{
-          field: 'date',
-          operator: 'gte',
-          value: DateTime.fromJSDate(from).toFormat('yyyy-MM-dd')
-        }, {
-          field: 'date',
-          operator: 'lt',
-          value: DateTime.fromJSDate(to).toFormat('yyyy-MM-dd'),
-        }]
+        filters: [] as any[]
       }
     };
+
+    if (filter.dateRangeDates) {
+      totalsQuery.filter.filters.push({
+        field: 'date',
+        operator: 'gte',
+        value: DateTime.fromJSDate(filter.dateRangeDates[0]).toFormat('yyyy-MM-dd')
+      })
+
+      totalsQuery.filter.filters.push({
+        field: 'date',
+        operator: 'lt',
+        value: DateTime.fromJSDate(filter.dateRangeDates[1]).toFormat('yyyy-MM-dd'),
+      });
+    }
+
+    if (filter.jobIds.length > 0) {
+      totalsQuery.filter.filters.push({
+        field: 'jobId',
+        operator: 'in',
+        value: filter.jobIds.join(',')
+      });
+    }
 
     const seriesQuery = {
       ...totalsQuery,

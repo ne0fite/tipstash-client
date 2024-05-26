@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { DateTime } from 'luxon';
-import Chart, { Legend } from 'chart.js/auto';
-import { DataItem } from '../shift.service';
+import Chart from 'chart.js/auto';
+import { Bucket, DataItem } from '../shift.service';
 
 @Component({
   selector: 'ts-chart',
@@ -13,8 +13,8 @@ import { DataItem } from '../shift.service';
 export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input({ required: true }) data!: DataItem[];
   @Input({ required: true }) field!: string;
-  @Input({ required: true }) bucket!: 'day' | 'month';
-
+  @Input() bucket: Bucket = 'month'
+  @Input() withPrior: boolean = false;
   chartId!: string;
 
   chart!: Chart | null;
@@ -47,38 +47,51 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
     const currentSeriesData: number[] = [];
     const priorSeriesData: (number | null)[] = [];
 
+    const chartType = this.withPrior ? 'bar' : 'line';
+
     let bucketDateFormat;
-    if (this.bucket === 'day') {
-      bucketDateFormat = 'M/d/yyyy';
-    } else {
+    if (this.bucket === 'month') {
       bucketDateFormat = 'MMM';
+    } else if (this.bucket === 'year') {
+      bucketDateFormat = 'yyyy';
+    } else {
+      bucketDateFormat = 'M/d/yyyy';
     }
 
     for (const dataItem of this.data) {
       const bucketDate = new Date(dataItem.date);
-      labels.push(DateTime.fromJSDate(bucketDate).toFormat(bucketDateFormat));
+      // work date is date-only but comes from the server at midnight UTC
+      labels.push(DateTime.fromJSDate(bucketDate).toUTC().toFormat(bucketDateFormat));
       currentSeriesData.push(dataItem[this.field] as number);
 
       const priorFieldName = `prior_${this.field}`;
       priorSeriesData.push((dataItem[priorFieldName] || 0) as number);
     }
 
+    const datasets: any[] = [
+      {
+        label: "Current Year",
+        data: currentSeriesData,
+        borderColor: 'blue',
+        // backgroundColor: Utils.transparentize(Utils.CHART_COLORS.blue, 0.5),
+        backgroundColor: 'blue',
+        cubicInterpolationMode: 'monotone',
+      }
+    ];
+
+    if (this.withPrior) {
+      datasets.push({
+        label: "Prior Year",
+        data: priorSeriesData,
+        backgroundColor: 'grey'
+      });
+    }
+
     this.chart = new Chart(this.chartId, {
-      type: 'bar',
+      type: chartType,
       data: {
         labels,
-        datasets: [
-          {
-            label: "Current Year",
-            data: currentSeriesData,
-            backgroundColor: 'blue'
-          },
-          {
-            label: "Prior Year",
-            data: priorSeriesData,
-            backgroundColor: 'grey'
-          }
-        ]
+        datasets,
       },
       options: {
         aspectRatio: 2.5,
@@ -86,7 +99,8 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
           legend: {
             display: false
           }
-        }
+        },
+        responsive: true
       }
     });
   }

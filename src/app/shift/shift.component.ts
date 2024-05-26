@@ -4,8 +4,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { ButtonModule } from 'primeng/button';
-import { ShiftListComponent } from './shift-list/shift-list.component';
 
+import { ShiftListComponent } from './shift-list/shift-list.component';
 
 @Component({
   selector: 'dt-shift',

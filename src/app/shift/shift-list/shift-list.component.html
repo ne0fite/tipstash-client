@@ -20,5 +20,5 @@
 <ts-shift-card *ngFor="let shift of shifts" [shift]="shift"></ts-shift-card>
 
 <div>
-  <button pButton type="button" (click)="loadNextPage()" severity="secondary">Load More</button>
+  <button pButton type="button" (click)="loadNextPage()" severity="secondary" *ngIf="hasMore">Load More</button>
 </div>
