@@ -1,12 +1,17 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
+import { CommonModule, CurrencyPipe, formatCurrency, formatNumber, formatPercent } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+
 import { Bucket, DataItem, OverviewData } from '../shift.service';
-import { CurrencyPipe, formatCurrency, formatNumber, formatPercent } from '@angular/common';
 import { ChartComponent } from '../chart/chart.component';
 
 @Component({
   selector: 'ts-overview-panel',
   standalone: true,
   imports: [
+    CommonModule,
+    FontAwesomeModule,
     CurrencyPipe,
     ChartComponent,
   ],
@@ -21,9 +26,17 @@ export class OverviewPanelComponent implements OnChanges {
   @Input() withPrior: boolean = false;
   @Input() bucket: Bucket = 'month';
 
-  currentValue!: string;
-  priorValue!: string;
+  currentValue: string = '';
+  priorValue: string = '';
+  change: string = '';
   series: DataItem[] = [];
+
+  changeClass = {
+    'text-success': true,
+    'text-danger': false
+  };
+
+  changeArrow = faCaretUp;
 
   ngOnChanges() {
     let formatter;
@@ -40,8 +53,29 @@ export class OverviewPanelComponent implements OnChanges {
         break;
     }
 
-    this.currentValue = formatter(this.overview.totals[this.field]);
-    this.priorValue = formatter(this.overview.totals[`prior_${this.field}`]);
+    const currentValue: number = this.overview.totals[this.field];
+    const priorValue: number = this.overview.totals[`prior_${this.field}`];
+    const change = Math.abs(currentValue - priorValue) / priorValue * 100;
+
+    this.currentValue = formatter(currentValue);
+    this.priorValue = formatter(priorValue);
+
+    this.change = formatPercent(change / 100, 'en-us', '1.0-2');
+
+    if (currentValue >= priorValue) {
+      this.changeArrow = faCaretUp;
+      this.changeClass = {
+        'text-success': true,
+        'text-danger': false
+      };
+    } else {
+      this.changeArrow = faCaretDown;
+      this.changeClass = {
+        'text-success': false,
+        'text-danger': true
+      };
+    }
+
     this.series = this.overview.series;
   }
 

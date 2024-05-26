@@ -51,11 +51,21 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     let bucketDateFormat;
     if (this.bucket === 'month') {
-      bucketDateFormat = 'MMM';
+      if (this.data.length > 12) {
+        bucketDateFormat = 'MMM yyyy';
+      } else {
+        bucketDateFormat = 'MMM';
+      }
     } else if (this.bucket === 'year') {
       bucketDateFormat = 'yyyy';
     } else {
-      bucketDateFormat = 'M/d/yyyy';
+      if (this.data.length > 366) {
+        bucketDateFormat = 'M/d/yyyy';
+      } else if (this.data.length > 31) {
+        bucketDateFormat = 'M/d';
+      } else {
+        bucketDateFormat = 'd';
+      }
     }
 
     for (const dataItem of this.data) {

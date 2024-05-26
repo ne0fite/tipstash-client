@@ -4,7 +4,10 @@
       <h2>{{title}}</h2>
       <div class="summary-amount">
         <h3>{{currentValue}}</h3>
-        <p class="text-muted">{{priorValue}}</p>
+        <p class="text-muted" *ngIf="withPrior">
+          <span [ngClass]="changeClass"><fa-icon [icon]="changeArrow"></fa-icon> {{change}}</span>
+          {{priorValue}}
+        </p>
       </div>
     </div>
     <h3 class="card-subtitle text-muted"></h3>

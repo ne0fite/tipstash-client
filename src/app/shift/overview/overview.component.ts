@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSliders } from '@fortawesome/free-solid-svg-icons';
@@ -98,6 +98,10 @@ export class OverviewComponent implements OnInit {
         ...result.filters
       }
 
+      if (this.filters.dateRange == null) {
+        this.withPrior = false;
+      }
+
       this.saveState();
 
       await this.loadOverview();
@@ -109,18 +113,6 @@ export class OverviewComponent implements OnInit {
     if (savedStateJson) {
       try {
         const savedState: OverviewState = JSON.parse(savedStateJson);
-        // const savedState = {
-        //   filters: {
-        //     dateRange: 'custom',
-        //     dateRangeDates: [
-        //       new Date('2018-01-01T06:00:00Z'),
-        //       new Date('2019-01-01T06:00:00Z')
-        //     ],
-        //     jobIds: [],
-        //   },
-        //   withPrior: false
-        // } as OverviewState;
-
         const savedFilters = savedState.filters;
         if (Array.isArray(savedFilters.dateRangeDates)) {
           savedFilters.dateRangeDates = savedFilters.dateRangeDates.map((date) => new Date(date));
