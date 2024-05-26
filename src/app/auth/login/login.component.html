@@ -21,7 +21,12 @@
        ngClass="{ invalid-input: submitted && dealForm.controls.email.errors }"
   >
     <div>
-      <p-password formControlName="password" [inputId]="'password'" [feedback]="false" [toggleMask]="true"  [style]="{ width: '100%' }" />
+      <p-password formControlName="password"
+        [inputId]="'password'"
+        [feedback]="false"
+        [toggleMask]="true"
+        [style]="{ width: '100%' }"
+        [inputStyle]="{ width: '100%' }" />
     </div>
     <label for="password">Password</label>
     <p class="validation-message" *ngIf="submitted && password?.errors?.['required']">

@@ -1,4 +1,4 @@
-<form [formGroup]="shiftForm" (ngSubmit)="saveShift()" class="form">
+<form [formGroup]="shiftForm" (ngSubmit)="saveShift()" class="form" autocomplete="off">
   <div class="header">
     <h2>
       <a  routerLink="/shift">
@@ -49,6 +49,7 @@
         <p-calendar formControlName="date"
           [inputId]="'date'"
           [showButtonBar]="true"
+          [showClear]="true"
         />
       </div>
       <label for="date">Date</label>
@@ -56,11 +57,14 @@
         Date is required
       </p>
     </div>
+  </div>
+  <div class="row mb-3">
     <div class="col required-input">
       <div>
         <p-calendar formControlName="clockIn"
           [inputId]="'clockIn'"
           [timeOnly]="true"
+          [showClear]="true"
         />
       </div>
       <label for="clockIn">Clock In</label>
@@ -73,6 +77,7 @@
         <p-calendar formControlName="clockOut"
           [inputId]="'clockOut'"
           [timeOnly]="true"
+          [showClear]="true"
         />
       </div>
       <label for="clockOut">Clock Out</label>

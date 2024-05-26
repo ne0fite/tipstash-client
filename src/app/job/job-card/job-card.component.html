@@ -2,6 +2,7 @@
   <div class="card-body">
     <div class="card-title">
       <a routerLink="/job/{{job.id}}">{{job.name}}</a>
+      <span class="badge bg-success" *ngIf="job.defaultJob">Default</span>
     </div>
   </div>
 </div>
