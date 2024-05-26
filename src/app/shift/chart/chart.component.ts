@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { DateTime } from 'luxon';
 import Chart from 'chart.js/auto';
+import colorLib from '@kurkle/color';
+
 import { Bucket, DataItem } from '../shift.service';
 
 @Component({
@@ -78,13 +80,16 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
       priorSeriesData.push((dataItem[priorFieldName] || 0) as number);
     }
 
+    // const secondary = '#F2F5F9';
+    const orange = '#DC7325';
+    // const yellow = '#F2CC60';
+
     const datasets: any[] = [
       {
         label: "Current Year",
         data: currentSeriesData,
         borderColor: 'blue',
-        // backgroundColor: Utils.transparentize(Utils.CHART_COLORS.blue, 0.5),
-        backgroundColor: 'blue',
+        backgroundColor: '#5881F2',
         cubicInterpolationMode: 'monotone',
       }
     ];
@@ -93,7 +98,7 @@ export class ChartComponent implements AfterViewInit, OnChanges, OnDestroy {
       datasets.push({
         label: "Prior Year",
         data: priorSeriesData,
-        backgroundColor: 'grey'
+        backgroundColor: colorLib(orange).alpha(0.4).rgbString()
       });
     }
 
