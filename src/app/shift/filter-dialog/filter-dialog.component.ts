@@ -92,6 +92,8 @@ export class FilterDialogComponent implements OnInit {
       if (dateRange !== 'custom') {
         // create the date range from the selected date range preset
         this.filters.dateRangeDates = this.getDateRange(dateRange);
+      } else {
+        this.filters.dateRangeDates = this.filterForm.value.dateRangeDates || null;
       }
     } else {
       // show all dates

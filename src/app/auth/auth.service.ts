@@ -18,7 +18,6 @@ export class AuthService {
     private http: HttpClient,
   ) {
     this.accessToken = localStorage.getItem(Constants.LS_ACCESS_TOKEN_KEY);
-    console.log('service init', this.accessToken);
     this.loggedInSubject.next(this.accessToken != null);
   }
 
