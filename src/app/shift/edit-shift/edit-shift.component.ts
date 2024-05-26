@@ -169,7 +169,7 @@ export class EditShiftComponent implements OnInit {
     }
   }
 
-  async saveShift() {
+  async saveShift(andAdd = false) {
     this.submitted = true;
     if (!this.shiftForm.valid) {
       return;
@@ -180,15 +180,31 @@ export class EditShiftComponent implements OnInit {
     };
 
     try {
-      this.shift = await this.shiftService.save(dto, this.id);
-
-      this.shift.date = new Date(this.shift.date);
-      this.shift.clockIn = new Date(this.shift.clockIn);
-      this.shift.clockOut = new Date(this.shift.clockOut);
-      this.shiftForm.patchValue(this.shift);
+      const savedShift = await this.shiftService.save(dto, this.id);
 
       this.toastrService.success('Shift Saved!');
-      this.title = 'Edit Shift';
+
+      this.submitted = false;
+
+      if (andAdd) {
+        this.shift = {
+          date: new Date(this.shift.date),
+          clockIn: new Date(this.shift.clockIn),
+          clockOut: new Date(this.shift.clockOut),
+          amount: null,
+          sales: null,
+          tipOut: 0,
+          notes: null
+        };
+      } else {
+        this.shift = savedShift;
+        this.shift.date = new Date(this.shift.date);
+        this.shift.clockIn = new Date(this.shift.clockIn);
+        this.shift.clockOut = new Date(this.shift.clockOut);
+        this.title = 'Edit Shift';
+      }
+
+      this.shiftForm.patchValue(this.shift);
     } catch (error) {
       this.toastrService.error('Error Saving Shift');
     }

@@ -154,11 +154,11 @@ export class ShiftService {
         filters: [{
           field: 'date',
           operator: 'gte',
-          value: from.toISOString(),
+          value: DateTime.fromJSDate(from).toFormat('yyyy-MM-dd')
         }, {
           field: 'date',
-          operator: 'lte',
-          value: to.toISOString(),
+          operator: 'lt',
+          value: DateTime.fromJSDate(to).toFormat('yyyy-MM-dd'),
         }]
       }
     };

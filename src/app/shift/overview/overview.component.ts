@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DateTime } from 'luxon';
+
 import { OverviewData, ShiftService } from '../shift.service';
 import { OverviewPanelComponent } from '../overview-panel/overview-panel.component';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'ts-overview',
@@ -18,20 +20,25 @@ export class OverviewComponent implements OnInit {
 
   filter = {};
 
+  fromDate!: Date;
+  toDate!: Date;
+
   constructor(
     private shiftService: ShiftService
   ) {}
 
   async ngOnInit() {
+    this.fromDate = DateTime.now().startOf('year').toJSDate();
+    this.toDate = DateTime.now().endOf('month').toJSDate();
+
     await this.loadOverview();
   }
 
   async loadOverview() {
     this.overview = await this.shiftService.getOverview(
-      new Date('2018-01-01T05:00:00Z'),
-      new Date('2019-01-01T05:00:00Z'),
+      this.fromDate,
+      this.toDate,
       'month'
     );
-    console.log(this.overview);
   }
 }
