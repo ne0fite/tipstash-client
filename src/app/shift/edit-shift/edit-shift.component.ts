@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
+import { DateTime } from 'luxon';
 
 import { ButtonModule } from 'primeng/button';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
@@ -13,11 +15,9 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 
-import { CommonModule } from '@angular/common';
 import { DialogService } from '../../dialog/dialog.service';
 import { ShiftService } from '../shift.service';
 import { JobService } from '../../job/job.service';
-import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-edit-shift',
@@ -92,7 +92,7 @@ export class EditShiftComponent implements OnInit {
     private dialogService: DialogService,
     private jobService: JobService,
     private shiftService: ShiftService,
-  ) {}
+  ) { }
 
   get jobId() {
     return this.shiftForm.get('jobId');
@@ -133,7 +133,7 @@ export class EditShiftComponent implements OnInit {
       this.shift = await this.shiftService.getById(this.id);
       this.title = 'Edit Shift';
 
-      this.shift.date = new Date(this.shift.date);
+      this.shift.date = DateTime.fromFormat(this.shift.date, 'yyyy-MM-dd').toJSDate();
       this.shift.clockIn = new Date(this.shift.clockIn);
       this.shift.clockOut = new Date(this.shift.clockOut);
     } else {
@@ -158,8 +158,8 @@ export class EditShiftComponent implements OnInit {
     if (this.shift.clockOut < this.shift.clockIn) {
       this.shift.clockOut = new Date(this.shift.clockOut.getTime() + 86400000);
     }
-
   }
+
   onJobChange(event: DropdownChangeEvent) {
     const { value: selectedJobId } = event;
     const selectedJob = this.jobs.find(job => job.id === selectedJobId);
@@ -217,8 +217,8 @@ export class EditShiftComponent implements OnInit {
 
     const result = await this.dialogService.confirm(
       'Are you sure you want to delete this shift?', {
-        title: 'Delete Shift?'
-      }
+      title: 'Delete Shift?'
+    }
     );
 
     if (result) {

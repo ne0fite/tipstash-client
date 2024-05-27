@@ -292,6 +292,18 @@ export class ShiftService {
       ...shift
     };
 
+    payload.date = DateTime.fromJSDate(shift.date).toFormat('yyyy-MM-dd');
+    const clockIn = new Date(`${payload.date}T${DateTime.fromJSDate(shift.clockIn).toUTC().toFormat('HH:mm:ss')}Z`);
+    let clockOut = new Date(`${payload.date}T${DateTime.fromJSDate(shift.clockOut).toUTC().toFormat('HH:mm:ss')}Z`);
+    if (clockOut < clockIn) {
+      clockOut = new Date(clockOut.getTime() + 24 * 60 * 60 * 1000);
+    }
+
+    payload.clockIn = clockIn.toISOString();
+    payload.clockOut = clockOut.toISOString();
+
+    console.log(payload);
+
     const observable = this.httpClient.post<any>(url, payload);
     const savedJob = await firstValueFrom(observable);
 
