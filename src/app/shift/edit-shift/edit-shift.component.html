@@ -58,6 +58,48 @@
       </p>
     </div>
   </div>
+
+  <div class="row mb-3">
+    <div class="col required-input"
+        ngClass="{ invalid-input: submitted && shiftForm.controls.amount.errors }"
+    >
+      <div>
+        <p-inputNumber formControlName="amount"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+          [inputId]="'amount'"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+          [inputStyle]="{ width: '100%' }"
+        />
+      </div>
+      <label for="amount">Total Tips</label>
+      <p class="validation-message" *ngIf="submitted && amount?.errors?.['required']">
+        Total Tips is required
+      </p>
+    </div>
+    <div class="col required-input"
+        ngClass="{ invalid-input: submitted && shiftForm.controls.sales.errors }"
+    >
+      <div>
+        <p-inputNumber formControlName="sales"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+          [inputId]="'sales'"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+          [inputStyle]="{ width: '100%' }"
+        />
+      </div>
+      <label for="sales">Sales</label>
+      <p class="validation-message" *ngIf="submitted && sales?.errors?.['required']">
+        Sales is required
+      </p>
+    </div>
+  </div>
+
   <div class="row mb-3">
     <div class="col required-input">
       <div>
@@ -88,45 +130,6 @@
   </div>
 
   <div class="row mb-3">
-    <div class="col required-input"
-        ngClass="{ invalid-input: submitted && shiftForm.controls.amount.errors }"
-    >
-      <div>
-        <p-inputNumber formControlName="amount"
-          mode="currency"
-          currency="USD"
-          locale="en-US"
-          [inputId]="'amount'"
-          [minFractionDigits]="2"
-          [maxFractionDigits]="2"
-        />
-      </div>
-      <label for="amount">Total Tips</label>
-      <p class="validation-message" *ngIf="submitted && amount?.errors?.['required']">
-        Total Tips is required
-      </p>
-    </div>
-    <div class="col required-input"
-        ngClass="{ invalid-input: submitted && shiftForm.controls.sales.errors }"
-    >
-      <div>
-        <p-inputNumber formControlName="sales"
-          mode="currency"
-          currency="USD"
-          locale="en-US"
-          [inputId]="'sales'"
-          [minFractionDigits]="2"
-          [maxFractionDigits]="2"
-        />
-      </div>
-      <label for="sales">Sales</label>
-      <p class="validation-message" *ngIf="submitted && sales?.errors?.['required']">
-        Sales is required
-      </p>
-    </div>
-  </div>
-
-  <div class="row mb-3">
     <div class="col">
       <div>
         <p-inputNumber formControlName="tipOut"
@@ -136,10 +139,12 @@
           [inputId]="'tipOut'"
           [minFractionDigits]="2"
           [maxFractionDigits]="2"
+          [inputStyle]="{ width: '100%' }"
         />
       </div>
       <label for="tipOut">Tip Out</label>
     </div>
+    <div class="col"></div>
   </div>
 
   <div class="row mb-3">
@@ -149,7 +154,8 @@
             rows="5"
             cols="30"
             pInputTextarea
-            formControlName="notes">
+            formControlName="notes"
+            [style]="{ width: '100%' }">
         </textarea>
       </div>
       <label for="tipOut">Notes</label>

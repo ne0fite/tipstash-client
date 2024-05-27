@@ -187,18 +187,20 @@ export class EditShiftComponent implements OnInit {
       this.submitted = false;
 
       if (andAdd) {
+        this.id = undefined;
         this.shift = {
-          date: new Date(this.shift.date),
-          clockIn: new Date(this.shift.clockIn),
-          clockOut: new Date(this.shift.clockOut),
+          date: DateTime.fromFormat(savedShift.date, 'yyyy-MM-dd').toJSDate(),
+          clockIn: new Date(savedShift.clockIn),
+          clockOut: new Date(savedShift.clockOut),
           amount: null,
           sales: null,
           tipOut: 0,
           notes: null
         };
+        this.title = 'Add Shift';
       } else {
         this.shift = savedShift;
-        this.shift.date = new Date(this.shift.date);
+        this.shift.date = DateTime.fromFormat(this.shift.date, 'yyyy-MM-dd').toJSDate();
         this.shift.clockIn = new Date(this.shift.clockIn);
         this.shift.clockOut = new Date(this.shift.clockOut);
         this.title = 'Edit Shift';

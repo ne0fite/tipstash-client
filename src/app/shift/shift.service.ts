@@ -302,8 +302,6 @@ export class ShiftService {
     payload.clockIn = clockIn.toISOString();
     payload.clockOut = clockOut.toISOString();
 
-    console.log(payload);
-
     const observable = this.httpClient.post<any>(url, payload);
     const savedJob = await firstValueFrom(observable);
 
